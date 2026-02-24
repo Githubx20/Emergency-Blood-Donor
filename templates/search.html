@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-center mb-4">Find Blood Donor</h2>
+
+<div class="card shadow p-4 mb-4">
+<form method="POST">
+
+<div class="row">
+
+<div class="col-md-4">
+<select name="blood_group" class="form-control" required>
+<option value="">Select Blood Group</option>
+<option>All</option>
+<option>A+</option><option>A-</option>
+<option>B+</option><option>B-</option>
+<option>O+</option><option>O-</option>
+<option>AB+</option><option>AB-</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<select name="department" class="form-control">
+<option>All</option>
+<option>CSE</option>
+<option>ECE</option>
+<option>ME</option>
+<option>CE</option>
+<option>EEE</option>
+</select>
+</div>
+
+<div class="col-md-4">
+<select name="batch" class="form-control">
+<option>All</option>
+<option>2022</option>
+<option>2023</option>
+<option>2024</option>
+<option>2025</option>
+<option>2026</option>
+</select>
+</div>
+
+</div>
+
+<button class="btn btn-danger mt-3 w-100">Search</button>
+
+</form>
+</div>
+
+{% if donors %}
+<table class="table table-bordered table-striped shadow">
+<tr class="table-dark">
+<th>Name</th>
+<th>Department</th>
+<th>Batch</th>
+<th>Blood</th>
+<th>Phone</th>
+</tr>
+
+{% for donor in donors %}
+<tr>
+<td>{{ donor["name"] }}</td>
+<td>{{ donor["department"] }}</td>
+<td>{{ donor["batch"] }}</td>
+<td>{{ donor["blood_group"] }}</td>
+<td>{{ donor["phone"] }}</td>
+</tr>
+{% endfor %}
+</table>
+
+{% elif request.method == "POST" %}
+<div class="alert alert-warning text-center">
+No matching donors found.
+</div>
+{% endif %}
+
+{% endblock %}
