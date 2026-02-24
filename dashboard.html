@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4 text-center">Admin Dashboard</h2>
+
+{% if blood_labels and blood_counts %}
+
+<h4 class="mb-3">Blood Group Distribution (Approved Donors)</h4>
+
+<div class="card shadow p-4 mb-4">
+    <canvas id="bloodChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const ctx = document.getElementById('bloodChart');
+
+new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: {{ blood_labels|tojson }},
+        datasets: [{
+            data: {{ blood_counts|tojson }},
+            backgroundColor: [
+                '#dc3545',
+                '#0d6efd',
+                '#198754',
+                '#ffc107',
+                '#6f42c1',
+                '#fd7e14',
+                '#20c997',
+                '#6c757d'
+            ]
+        }]
+    },
+    options: {
+        responsive: true
+    }
+});
+</script>
+
+{% else %}
+
+<div class="alert alert-info text-center">
+No approved donors yet. Approve donors to generate analytics.
+</div>
+
+{% endif %}
+
+<hr>
+
+<h4 class="mt-4">All Registered Students</h4>
+
+<table class="table table-striped table-bordered shadow">
+<tr class="table-dark">
+<th>ID</th>
+<th>Name</th>
+<th>ERP</th>
+<th>Dept</th>
+<th>Batch</th>
+<th>Year</th>
+<th>Blood</th>
+<th>Status</th>
+<th>Approved</th>
+<th>Action</th>
+</tr>
+
+{% for donor in donors %}
+<tr>
+<td>{{ donor["id"] }}</td>
+<td>{{ donor["name"] }}</td>
+<td>{{ donor["erp_id"] }}</td>
+<td>{{ donor["department"] }}</td>
+<td>{{ donor["batch"] }}</td>
+<td>{{ donor["academic_year"] }}</td>
+<td>{{ donor["blood_group"] }}</td>
+<td>
+{% if donor["available"] == "Yes" %}
+<span class="badge bg-primary">Available</span>
+{% else %}
+<span class="badge bg-danger">Not Available</span>
+{% endif %}
+</td>
+<td>
+{% if donor["approved"] == "Yes" %}
+<span class="badge bg-success">Approved</span>
+{% else %}
+<span class="badge bg-secondary">Pending</span>
+{% endif %}
+</td>
+<td>
+
+{% if donor["approved"] == "No" %}
+<a href="/approve/{{ donor['id'] }}" class="btn btn-success btn-sm mb-1">Approve</a>
+{% else %}
+<span class="badge bg-success d-block mb-1">Approved</span>
+{% endif %}
+
+<a href="/admin_toggle/{{ donor['id'] }}"
+   class="btn btn-warning btn-sm">
+   Toggle Availability
+</a>
+
+</td>
+</tr>
+{% endfor %}
+</table>
+
+<a href="/logout" class="btn btn-dark mt-3">Logout</a>
+
+{% endblock %}
