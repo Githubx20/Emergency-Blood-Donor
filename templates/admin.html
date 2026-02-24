@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Admin Dashboard</h2>
+
+<table class="table table-striped">
+<tr>
+<th>ID</th><th>Name</th><th>Blood</th><th>Phone</th>
+<th>City</th><th>Status</th><th>Action</th>
+</tr>
+
+{% for donor in donors %}
+<tr>
+<td>{{ donor["id"] }}</td>
+<td>{{ donor["name"] }}</td>
+<td>{{ donor["blood_group"] }}</td>
+<td>{{ donor["phone"] }}</td>
+<td>{{ donor["city"] }}</td>
+<td>{{ donor["available"] }}</td>
+<td>
+<a href="/toggle/{{ donor['id'] }}" class="btn btn-warning btn-sm">Toggle</a>
+<a href="/delete/{{ donor['id'] }}" class="btn btn-danger btn-sm">Delete</a>
+</td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}
